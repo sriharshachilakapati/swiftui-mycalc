@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct CalcKeypadWidgetCore: View {
-    
-    private let spacing: CGFloat = 12
-    private let buttonSize: CGFloat = 40
 
     var action: (CalcButtonVariant) -> Void
     
@@ -19,60 +16,35 @@ struct CalcKeypadWidgetCore: View {
     }
     
     var body: some View {
-        HStack(alignment: .top, spacing: spacing) {
-            VStack(alignment: .leading, spacing: spacing) {
-                HStack(alignment: .top, spacing: spacing) {
-                    button(.operation(.clear))
-                    button(.operation(.divide))
-                    button(.operation(.multiply))
-                }
-                
-                HStack(alignment: .top, spacing: spacing) {
-                    button(.digit(.seven))
-                    button(.digit(.eight))
-                    button(.digit(.nine))
-                }
-                
-                HStack(alignment: .top, spacing: spacing) {
-                    button(.digit(.four))
-                    button(.digit(.five))
-                    button(.digit(.six))
-                }
-                
-                HStack(alignment: .top, spacing: spacing) {
-                    button(.digit(.one))
-                    button(.digit(.two))
-                    button(.digit(.three))
-                }
-                
-                HStack(alignment: .top, spacing: spacing) {
-                    wideButton(.digit(.zero))
-                    button(.operation(.delete))
-                }
-            }
-            .frame(maxWidth: .infinity)
+        GridLayout(columns: 4, spacing: 12) {
+            CalcButtonWidget(variant: .operation(.clear), action: action)
+            CalcButtonWidget(variant: .operation(.divide), action: action)
+            CalcButtonWidget(variant: .operation(.multiply), action: action)
+            CalcButtonWidget(variant: .operation(.subtract), action: action)
             
-            VStack(alignment: .leading, spacing: spacing) {
-                button(.operation(.subtract))
-                tallButton(.operation(.add))
-                tallButton(.operation(.equals))
-            }
+            CalcButtonWidget(variant: .digit(.seven), action: action)
+            CalcButtonWidget(variant: .digit(.eight), action: action)
+            CalcButtonWidget(variant: .digit(.nine), action: action)
+            
+            CalcButtonWidget(variant: .operation(.add), action: action)
+                .gridSpan(rows: 2)
+            
+            CalcButtonWidget(variant: .digit(.four), action: action)
+            CalcButtonWidget(variant: .digit(.five), action: action)
+            CalcButtonWidget(variant: .digit(.six), action: action)
+            
+            CalcButtonWidget(variant: .digit(.one), action: action)
+            CalcButtonWidget(variant: .digit(.two), action: action)
+            CalcButtonWidget(variant: .digit(.three), action: action)
+            
+            CalcButtonWidget(variant: .operation(.equals), action: action)
+                .gridSpan(rows: 2)
+
+            CalcButtonWidget(variant: .digit(.zero), action: action)
+                .gridSpan(cols: 2)
+            
+            CalcButtonWidget(variant: .operation(.delete), action: action)
         }
-        .frame(maxHeight: .infinity)
     }
     
-    private func button(_ variant: CalcButtonVariant) -> some View {
-        CalcButtonWidget(variant: variant, action: action)
-            .buttonSize(width: buttonSize, height: buttonSize)
-    }
-    
-    private func wideButton(_ variant: CalcButtonVariant) -> some View {
-        CalcButtonWidget(variant: variant, action: action)
-            .buttonSize(width: buttonSize * 2 + spacing, height: buttonSize)
-    }
-    
-    private func tallButton(_ variant: CalcButtonVariant) -> some View {
-        CalcButtonWidget(variant: variant, action: action)
-            .buttonSize(width: buttonSize, height: buttonSize * 2 + spacing)
-    }
 }

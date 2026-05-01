@@ -29,7 +29,6 @@ enum CalcButtonVariant : Hashable {
         case subtract = "-"
         case multiply = "×"
         case divide = "÷"
-        case decimal = "."
         case equals = "="
         case clear = "AC"
         case delete = "⌫"

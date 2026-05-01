@@ -17,6 +17,7 @@ struct ContentView: View {
                 EditorPane()
                 
                 CalcKeypadWidget { _ in }
+                    .padding(16)
             }
         }
     }
