@@ -9,9 +9,6 @@ import SwiftUI
 
 struct CalcButtonWidget : View {
     
-    private var width: CGFloat = 40
-    private var height: CGFloat = 40
-    
     var variant: CalcButtonVariant
     var action: (CalcButtonVariant) -> Void
     
@@ -28,13 +25,5 @@ struct CalcButtonWidget : View {
         ) {
             action(variant)
         }
-        .buttonSize(width: width, height: height)
-    }
-    
-    func buttonSize(width: CGFloat, height: CGFloat) -> some View {
-        var copy = self
-        copy.width = width
-        copy.height = height
-        return copy
     }
 }

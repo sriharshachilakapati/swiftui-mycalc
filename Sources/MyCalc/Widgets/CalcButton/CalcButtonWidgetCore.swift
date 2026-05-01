@@ -21,27 +21,20 @@ struct CalcButtonWidgetCore: View {
         self.action = action
     }
     
-    private var width: CGFloat = 40
-    private var height: CGFloat = 40
-    
     var body: some View {
         Button(action: action) {
             Text(label)
                 .padding(6)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(
+                    maxWidth: .infinity,
+                    minHeight: 50,
+                    maxHeight: .infinity
+                )
                 .font(.system(size: 18))
                 .foregroundStyle(foregroundColor)
                 .background(backgroundColor)
         }
-        .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-    
-    func buttonSize(width: CGFloat, height: CGFloat) -> some View {
-        var copy = self
-        copy.width = width
-        copy.height = height
-        return copy
     }
 }
 
@@ -53,4 +46,5 @@ struct CalcButtonWidgetCore: View {
     ) {
         // EMPTY
     }
+    .frame(width: 40, height: 40)
 }
