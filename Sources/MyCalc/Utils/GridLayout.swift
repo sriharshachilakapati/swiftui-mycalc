@@ -72,7 +72,6 @@ struct GridLayout : Layout {
             let placement = placements[index]!
             
             let possibleCellWidth = baseCellWidth * CGFloat(placement.colSpan)
-                + spacing * CGFloat(placement.colSpan - 1)
 
             let measuredSize = subview.sizeThatFits(.init(width: possibleCellWidth, height: nil))
             
