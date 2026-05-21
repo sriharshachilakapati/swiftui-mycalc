@@ -18,8 +18,11 @@ struct ContentView: View {
                 
                 CalcKeypadWidget { _ in }
                     .padding(16)
+                    .debugDimensions()
             }
+            .debugDimensions()
         }
+        .debugDimensions()
     }
 }
 
