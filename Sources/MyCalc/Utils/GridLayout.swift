@@ -11,12 +11,20 @@ struct GridLayout : Layout {
     
     typealias Cache = GridCache
     
+    static var layoutProperties: LayoutProperties {
+        var props = LayoutProperties()
+        props.stackOrientation = nil
+        return props
+    }
+    
     var columns: Int
     var spacing: CGFloat
+    var fillType: GridFillType
     
-    init(columns: Int, spacing: CGFloat = 12) {
+    init(columns: Int, spacing: CGFloat = 12, fillType: GridFillType = .wrapContent) {
         self.columns = columns
         self.spacing = spacing
+        self.fillType = fillType
     }
     
     func makeCache(subviews: Subviews) -> GridCache {
@@ -30,8 +38,11 @@ struct GridLayout : Layout {
     
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout GridCache) -> CGSize {
         let availableWidth = proposal.width ?? 300
+        let availableHeight = proposal.height ?? 300
         
-        if cache.lastWidth == availableWidth {
+        let proposedSize = CGSize(width: availableWidth, height: availableHeight)
+        
+        if cache.lastSize == proposedSize {
             return cache.totalSize
         }
         
@@ -65,15 +76,20 @@ struct GridLayout : Layout {
         var colWidths = Array(repeating: CGFloat(0), count: columns)
         var rowHeights = Array(repeating: CGFloat(0), count: occupied.count)
         
-        let totalSpacing = spacing * CGFloat(columns - 1)
-        let baseCellWidth = (availableWidth - totalSpacing) / CGFloat(columns)
+        let totalHorizontalSpacing = spacing * CGFloat(columns - 1)
+        let totalVerticalSpacing = spacing * CGFloat(occupied.count - 1)
+        
+        let baseCellWidth = (availableWidth - totalHorizontalSpacing) / CGFloat(columns)
+        let baseCellHeight = (availableHeight - totalVerticalSpacing) / CGFloat(occupied.count)
 
         for (index, subview) in subviews.enumerated() {
             let placement = placements[index]!
             
             let possibleCellWidth = baseCellWidth * CGFloat(placement.colSpan)
+            let possibleCellHeight = baseCellHeight * CGFloat(placement.rowSpan)
+            let possibleCellSize = CGSize(width: possibleCellWidth, height: possibleCellHeight)
 
-            let measuredSize = subview.sizeThatFits(.init(width: possibleCellWidth, height: nil))
+            let measuredSize = subview.sizeThatFits(fillType.calculateProposedViewSize(for: possibleCellSize))
             
             let widthPerCol = measuredSize.width / CGFloat(placement.colSpan)
             let heightPerRow = measuredSize.height / CGFloat(placement.rowSpan)
@@ -90,7 +106,7 @@ struct GridLayout : Layout {
         let totalWidth = colWidths.reduce(0, +) + spacing * CGFloat(colWidths.count - 1)
         let totalHeight = rowHeights.reduce(0, +) + spacing * CGFloat(rowHeights.count - 1)
         
-        cache.lastWidth = availableWidth
+        cache.lastSize = proposedSize
         cache.colWidths = colWidths
         cache.rowHeights = rowHeights
         cache.placements = placements
@@ -100,6 +116,10 @@ struct GridLayout : Layout {
     }
     
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout GridCache) {
+        if cache.lastSize != bounds.size {
+            _ = sizeThatFits(proposal: .init(bounds.size), subviews: subviews, cache: &cache)
+        }
+        
         for (index, subview) in subviews.enumerated() {
             let placement = cache.placements[index]!
             
@@ -175,5 +195,27 @@ struct GridCache {
     var rowHeights: [CGFloat] = []
     var colWidths: [CGFloat] = []
     var totalSize: CGSize = .zero
-    var lastWidth: CGFloat? = nil
+    var lastSize: CGSize? = nil
+}
+
+enum GridFillType {
+    case wrapContent
+    case fillWidth
+    case fillHeight
+    case fill
+}
+
+extension GridFillType {
+    internal func calculateProposedViewSize(for availableSize: CGSize) -> ProposedViewSize {
+        switch self {
+            case .fill:
+                return .init(width: availableSize.width, height: availableSize.height)
+            case .fillWidth:
+                return .init(width: availableSize.width, height: nil)
+            case .fillHeight:
+                return .init(width: nil, height: availableSize.height)
+            case .wrapContent:
+                return .init(width: nil, height: nil)
+        }
+    }
 }

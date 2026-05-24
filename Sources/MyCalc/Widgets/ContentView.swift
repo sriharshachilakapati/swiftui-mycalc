@@ -17,7 +17,9 @@ struct ContentView: View {
                 EditorPane()
                 
                 CalcKeypadWidget { _ in }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(16)
+                    .debugDimensions()
             }
         }
     }
