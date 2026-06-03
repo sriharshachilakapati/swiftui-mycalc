@@ -13,14 +13,31 @@ struct ContentView: View {
             Color.gray
                 .edgesIgnoringSafeArea(.all)
             
-            VStack {
-                EditorPane()
-                
-                CalcKeypadWidget { _ in }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(16)
-                    .debugDimensions()
+            let contents = mainContent()
+            
+            GeometryReader { proxy in
+                if proxy.size.width <= proxy.size.height {
+                    VStack {
+                        contents
+                    }
+                } else {
+                    HStack {
+                        contents
+                    }
+                }
             }
+        }
+    }
+    
+    @ViewBuilder
+    func mainContent() -> some View {
+        Group {
+            EditorPane()
+            
+            CalcKeypadWidget { _ in }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(16)
+                .debugDimensions()
         }
     }
 }
