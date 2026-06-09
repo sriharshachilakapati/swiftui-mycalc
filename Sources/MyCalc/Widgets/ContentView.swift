@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    @StateObject var viewModel = CalculatorViewModel()
+
     var body: some View {
         ZStack {
             Color.gray
@@ -32,12 +35,25 @@ struct ContentView: View {
     @ViewBuilder
     func mainContent() -> some View {
         Group {
-            EditorPane()
-            
-            CalcKeypadWidget { _ in }
+            EditorPane(displayText: viewModel.display)
+                .padding(.top, 16)
+                .padding(.horizontal, 16)
+
+            CalcKeypadWidget(action: handleCalculatorAction(_:))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(16)
-                .debugDimensions()
+        }
+    }
+
+    private func handleCalculatorAction(_ buttonVariant: CalcButtonVariant) {
+        switch buttonVariant {
+            case .digit(let digit):
+                viewModel.buttonTapped(digit: digit)
+                break
+
+            case .operation(let operation):
+                viewModel.buttonTapped(operation: operation)
+                break
         }
     }
 }

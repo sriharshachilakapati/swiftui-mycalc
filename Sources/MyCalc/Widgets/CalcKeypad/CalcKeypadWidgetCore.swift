@@ -50,7 +50,6 @@ struct CalcKeypadWidgetCore: View {
                 CalcButtonWidget(variant: .operation(.delete), action: action)
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
-            .debugDimensions()
         }
     }
     

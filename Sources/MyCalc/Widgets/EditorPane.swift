@@ -8,13 +8,23 @@
 import SwiftUI
 
 struct EditorPane: View {
+    var displayText: String
+
     var body: some View {
-        Color.gray
-            .border(Color.black)
-            .frame(height: 250)
+        ZStack(alignment: .bottomTrailing) {
+            Color.gray
+                .mix(with: .white, by: 0.4)
+                .frame(height: 250)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+            Text(displayText)
+                .font(.largeTitle)
+                .foregroundStyle(.black)
+                .padding(16)
+        }
     }
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    EditorPane()
+    EditorPane(displayText: "3590")
 }
