@@ -15,9 +15,9 @@ class CalculatorViewModel : ObservableObject {
 
     public var display: String {
         if state.current.isEmpty {
-            "\(state.result)"
+            formattedNumber(number: state.result)
         } else {
-            "\(state.getCurrentValue())"
+            formattedNumber(number: state.getCurrentValue())
         }
     }
 

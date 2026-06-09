@@ -18,6 +18,16 @@ let project = Project(
                 .debug(name: "Debug", xcconfig: "./xcconfigs/MyCalc.xcconfig"),
                 .release(name: "Release", xcconfig: "./xcconfigs/MyCalc.xcconfig")
             ])
+        ),
+        .target(
+            name: "MyCalcTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.goharsha.MyCalc",
+            sources: ["Tests/MyCalc/**"],
+            dependencies: [
+                .target(name: "MyCalc")
+            ]
         )
     ]
 )
