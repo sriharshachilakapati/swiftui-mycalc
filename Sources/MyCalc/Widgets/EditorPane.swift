@@ -14,7 +14,6 @@ struct EditorPane: View {
         ZStack(alignment: .bottomTrailing) {
             Color.gray
                 .mix(with: .white, by: 0.4)
-                .frame(height: 250)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
 
             Text(displayText)

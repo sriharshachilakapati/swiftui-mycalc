@@ -12,11 +12,6 @@ struct CalcButtonWidget : View {
     var variant: CalcButtonVariant
     var action: (CalcButtonVariant) -> Void
     
-    init (variant: CalcButtonVariant, action: @escaping (CalcButtonVariant) -> Void) {
-        self.variant = variant
-        self.action = action
-    }
-    
     var body: some View {
         CalcButtonWidgetCore(
             label: variant.title,

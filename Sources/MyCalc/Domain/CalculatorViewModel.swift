@@ -6,12 +6,12 @@
 //
 
 import Combine
+import Observation
 
-class CalculatorViewModel : ObservableObject {
+@Observable
+class CalculatorViewModel {
 
-    private var state = CalculatorState() {
-        willSet { objectWillChange.send() }
-    }
+    private var state = CalculatorState()
 
     public var display: String {
         if state.current.isEmpty {
@@ -29,7 +29,6 @@ class CalculatorViewModel : ObservableObject {
         switch operation {
             case .clear:
                 state = CalculatorState()
-                break
 
             case .delete:
                 if !state.current.isEmpty {
@@ -37,7 +36,6 @@ class CalculatorViewModel : ObservableObject {
                 } else {
                     state = CalculatorState()
                 }
-                break
 
             case .equals:
                 if let function = state.operatorFunc {
@@ -47,7 +45,6 @@ class CalculatorViewModel : ObservableObject {
                     let result = state.getCurrentValue()
                     state = CalculatorState(result: result)
                 }
-                break
 
             default:
                 buttonTapped(operation: .equals)

@@ -9,23 +9,22 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @StateObject var viewModel = CalculatorViewModel()
+    @State var viewModel = CalculatorViewModel()
 
     var body: some View {
         ZStack {
             Color.gray
                 .edgesIgnoringSafeArea(.all)
             
-            let contents = mainContent()
-            
+
             GeometryReader { proxy in
                 if proxy.size.width <= proxy.size.height {
                     VStack {
-                        contents
+                        mainContent(maxHeight: 250)
                     }
                 } else {
                     HStack {
-                        contents
+                        mainContent()
                     }
                 }
             }
@@ -33,11 +32,14 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    func mainContent() -> some View {
+    func mainContent(maxHeight: CGFloat? = nil) -> some View {
         Group {
             EditorPane(displayText: viewModel.display)
                 .padding(.top, 16)
                 .padding(.horizontal, 16)
+                .conditional(if: maxHeight != nil) {
+                    $0.frame(maxHeight: maxHeight)
+                }
 
             CalcKeypadWidget(action: handleCalculatorAction(_:))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

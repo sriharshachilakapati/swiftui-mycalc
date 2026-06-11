@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 func formattedNumber(number: Double) -> String {
     if number.isNaN || number.isInfinite {
@@ -20,4 +21,15 @@ func formattedNumber(number: Double) -> String {
     formatter.numberStyle = .decimal
     formatter.maximumFractionDigits = 2
     return formatter.string(from: NSNumber(value: number)) ?? "\(number)"
+}
+
+extension View {
+    @ViewBuilder
+    func conditional<Content: View>(if condition: Bool, block: (Self) -> Content) -> some View {
+        if condition {
+            block(self)
+        } else {
+            self
+        }
+    }
 }
